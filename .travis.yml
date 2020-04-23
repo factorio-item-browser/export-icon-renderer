@@ -1,0 +1,8 @@
+language: go
+
+go:
+  - "1.14"
+
+script:
+  - go test -ldflags "-s -w" ./cmd/... ./pkg/...
+  - go vet -ldflags "-s -w" ./cmd/... ./pkg/...
