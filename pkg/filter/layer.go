@@ -17,11 +17,12 @@ func RemoveMipMaps(source image.Image, layer transfer.Layer, props Properties) i
 
 // Scale applies the scaling value of the layer to the source.
 func Scale(source image.Image, layer transfer.Layer, props Properties) image.Image {
-	if layer.Scale*props.RenderedScale == 1. {
+	scale := layer.Scale * props.RenderedScale
+	if scale == 1. {
 		return source
 	}
 
-	newSize := int(math.Round(float64(layer.Size) * layer.Scale * props.RenderedScale))
+	newSize := int(math.Round(float64(layer.Size) * scale))
 	return transform.Resize(source, newSize, newSize, resizeAlgorithm)
 }
 
