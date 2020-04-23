@@ -8,7 +8,7 @@ import (
 )
 
 // TintedBlendFilter blends the source onto the destination while applying the tint of the layer.
-func TintedBlendFilter(destination, source image.Image, layer transfer.Layer, icon transfer.Icon) image.Image {
+func TintedBlendFilter(destination, source image.Image, layer transfer.Layer, props Properties) image.Image {
 	tint := fcolor.RGBAF64{
 		R: layer.Tint.Red,
 		G: layer.Tint.Green,
