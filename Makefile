@@ -1,11 +1,12 @@
-.PHONY: help build clean fix test vendor
+.PHONY: help build clean fix test test-cover vendor
 
 BUILD_DIR   := build
 COMMAND_DIR := cmd
 PACKAGE     := github.com/factorio-item-browser/export-icon-renderer
 VERSION     ?= dev
 
-BUILD_FLAGS := -v -i -mod vendor -ldflags "-s -w -X $(PACKAGE)/pkg/env.Version=$(VERSION)"
+LD_FLAGS    := -ldflags "-s -w -X $(PACKAGE)/pkg/env.Version=$(VERSION)"
+BUILD_FLAGS := -v -i -mod vendor $(LD_FLAGS)
 
 help: ## Show this help.
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
@@ -25,8 +26,12 @@ fix: ## Fixes the coding style of the project.
 	go fmt ./cmd/... ./pkg/...
 
 test: ## Tests the project.
-	#go test ./cmd/... ./pkg/...
-	go vet ./cmd/... ./pkg/...
+	go test $(LD_FLAGS) ./cmd/... ./pkg/...
+	go vet $(LD_FLAGS) ./cmd/... ./pkg/...
+
+test-cover: ## Tests the project and generates the coverage report.
+	go test $(LD_FLAGS) -coverprofile=$(BUILD_DIR)/coverage.out ./cmd/... ./pkg/...
+	go tool cover -html=$(BUILD_DIR)/coverage.out
 
 vendor: ## Builds or updates the vendor directory
 	go mod tidy -v
