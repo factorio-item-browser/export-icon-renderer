@@ -1,4 +1,4 @@
-.PHONY: help build clean fix
+.PHONY: help build clean fix vendor
 
 BUILD_DIR   := build
 COMMAND_DIR := cmd
