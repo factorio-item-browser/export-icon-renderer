@@ -1,4 +1,11 @@
-# Factorio Item Browser - Export Icon Renderer
+![Factorio Item Browser](https://raw.githubusercontent.com/factorio-item-browser/documentation/master/asset/image/logo.png) 
+
+# Export Icon Renderer
+
+[![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/factorio-item-browser/export-icon-renderer)](https://github.com/factorio-item-browser/export-icon-renderer/releases)
+[![GitHub](https://img.shields.io/github/license/factorio-item-browser/export-icon-renderer)](LICENSE.md)
+[![build](https://img.shields.io/github/workflow/status/factorio-item-browser/export-icon-renderer/CI?logo=github)](https://github.com/factorio-item-browser/export-icon-renderer/actions)
+[![Codecov](https://img.shields.io/codecov/c/gh/factorio-item-browser/export-icon-renderer?logo=codecov)](https://codecov.io/gh/factorio-item-browser/export-icon-renderer)
 
 This project implements the icon renderer of the export in Go for fast processing of the images as layers. The icon
 renderer was first part of the exporter itself (i.e. PHP), but after discovering performance issues especially with
