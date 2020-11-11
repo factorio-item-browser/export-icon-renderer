@@ -40,7 +40,7 @@ func TestLoad(t *testing.T) {
 	}{
 		{
 			name:     "icon from actual mod",
-			fileName: "__foo__/graphics/icon.png",
+			fileName: "__bar__/graphics/icon.png",
 			expectedResult: &image.RGBA{
 				Pix: []uint8{
 					0xFF, 0x00, 0x00, 0xFF, 0xFF, 0x00, 0x00, 0xFF,
