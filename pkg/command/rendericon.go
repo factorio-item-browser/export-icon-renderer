@@ -2,6 +2,7 @@ package command
 
 import (
 	"encoding/json"
+	"github.com/factorio-item-browser/export-icon-renderer/pkg/errors"
 	"github.com/factorio-item-browser/export-icon-renderer/pkg/filter"
 	"github.com/factorio-item-browser/export-icon-renderer/pkg/io"
 	"github.com/factorio-item-browser/export-icon-renderer/pkg/transfer"
@@ -40,7 +41,7 @@ func (c *RenderIcon) Run(serializedIcon string) (string, error) {
 	for _, layer := range icon.Layers {
 		layerImage, err := io.Load(layer.FileName)
 		if err != nil {
-			return "", err
+			return "", errors.NewRenderIconError(icon.Id, err)
 		}
 
 		for _, layerFilter := range c.layerFilters {
@@ -51,7 +52,11 @@ func (c *RenderIcon) Run(serializedIcon string) (string, error) {
 	}
 	finalImage = c.resizeFilter(finalImage, transfer.Layer{}, props)
 
-	return io.Encode(finalImage)
+	encodedImage, err := io.Encode(finalImage)
+	if err != nil {
+		return "", errors.NewRenderIconError(icon.Id, err)
+	}
+	return encodedImage, nil
 }
 
 func createProperties(icon transfer.Icon) filter.Properties {

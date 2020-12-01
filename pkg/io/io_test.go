@@ -2,6 +2,7 @@ package io
 
 import (
 	"github.com/factorio-item-browser/export-icon-renderer/pkg/env"
+	"github.com/factorio-item-browser/export-icon-renderer/pkg/errors"
 	"github.com/stretchr/testify/assert"
 	"image"
 	"io/ioutil"
@@ -86,6 +87,40 @@ func TestLoad(t *testing.T) {
 	}
 }
 
+func TestLoad_WithError(t *testing.T) {
+	defer func(ref1, ref2 string) {
+		env.FactorioDataDirectory = ref1
+		env.FactorioModsDirectory = ref2
+	}(env.FactorioDataDirectory, env.FactorioModsDirectory)
+	env.FactorioDataDirectory = "../../test/asset/factorio/data"
+	env.FactorioModsDirectory = "../../test/asset/factorio/mods"
+
+	tests := []struct {
+		name          string
+		fileName      string
+		expectedError error
+	}{
+		{
+			name:          "invalid file name",
+			fileName:      "invalid/filename.png",
+			expectedError: &errors.InvalidFileNameError{},
+		},
+		{
+			name:          "missing image file",
+			fileName:      "__base__/graphics/not-existing.png",
+			expectedError: &errors.ImageLoadError{},
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			_, err := Load(test.fileName)
+
+			assert.IsType(t, test.expectedError, err)
+		})
+	}
+}
+
 func TestEncode(t *testing.T) {
 	img := image.RGBA{
 		Pix: []uint8{
@@ -102,4 +137,12 @@ func TestEncode(t *testing.T) {
 
 	assert.Nil(t, err)
 	assert.Equal(t, string(expectedResult), result)
+}
+
+func TestEncode_WithError(t *testing.T) {
+	img := image.NewRGBA(image.Rect(0, 0, 0, 0)) // Cannot encode image with size 0.
+
+	_, err := Encode(img)
+
+	assert.IsType(t, &errors.EncodingError{}, err)
 }
