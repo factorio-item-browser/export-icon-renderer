@@ -1,10 +1,12 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
-	"github.com/factorio-item-browser/export-icon-renderer/pkg/command"
 	"github.com/factorio-item-browser/export-icon-renderer/pkg/env"
 	"github.com/factorio-item-browser/export-icon-renderer/pkg/log"
+	"github.com/factorio-item-browser/export-icon-renderer/pkg/render"
+	"github.com/factorio-item-browser/export-icon-renderer/pkg/transfer"
 	"os"
 )
 
@@ -22,20 +24,25 @@ Environment variables:
 `
 
 func main() {
-	logger := log.Logger()
-
 	if len(os.Args) < 2 {
+		logger := log.Logger()
 		logger.Error().Msg("Missing icon definition as first argument.")
 		logger.Info().Msgf(usage, env.Version)
 		os.Exit(1)
 	}
 
-	cmd := command.NewRenderIcon()
-	img, err := cmd.Run(os.Args[1])
+	var icon transfer.Icon
+	err := json.Unmarshal([]byte(os.Args[1]), &icon)
 	if err != nil {
-		log.Error(logger.Error(), err)
+		log.Error(err)
 		os.Exit(1)
 	}
 
-	fmt.Print(img)
+	renderer := render.NewRenderer()
+	image, err := renderer.Render(icon)
+	if err != nil {
+		log.Error(err)
+		os.Exit(0)
+	}
+	fmt.Print(image)
 }

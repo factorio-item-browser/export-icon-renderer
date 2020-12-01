@@ -2,15 +2,14 @@ package log
 
 import (
 	"errors"
-	"github.com/rs/zerolog"
 )
 
 type logFieldsProvider interface {
 	LogFields() map[string]interface{}
 }
 
-func Error(event *zerolog.Event, err error) {
-	event.Fields(extractFields(err)).Msg(err.Error())
+func Error(err error) {
+	logger.Error().Fields(extractFields(err)).Msg(err.Error())
 }
 
 func extractFields(err error) map[string]interface{} {
