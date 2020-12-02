@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/anthonynsimon/bild/imgio"
 	"github.com/factorio-item-browser/export-icon-renderer/pkg/env"
+	"github.com/factorio-item-browser/export-icon-renderer/pkg/errors"
 	"image"
 	"regexp"
 )
@@ -23,7 +24,7 @@ func Create(size int) image.Image {
 func Load(fileName string) (image.Image, error) {
 	match := regexFileName.FindStringSubmatch(fileName)
 	if match == nil || len(match) < 3 {
-		return nil, fmt.Errorf("unable to understand filename: %s", fileName)
+		return nil, errors.NewInvalidFileNameError(fileName)
 	}
 
 	modName := match[1]
@@ -37,7 +38,7 @@ func Load(fileName string) (image.Image, error) {
 
 	img, err := imgio.Open(path)
 	if err != nil {
-		return nil, err
+		return nil, errors.NewImageLoadError(fileName, err)
 	}
 	return img, nil
 }
@@ -47,7 +48,7 @@ func Encode(img image.Image) (string, error) {
 	buf := new(bytes.Buffer)
 	err := encoder(buf, img)
 	if err != nil {
-		return "", err
+		return "", errors.NewEncodingError(err)
 	}
 	return buf.String(), nil
 }
