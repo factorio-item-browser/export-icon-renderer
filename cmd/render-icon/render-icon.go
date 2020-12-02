@@ -42,7 +42,7 @@ func main() {
 	image, err := renderer.Render(icon)
 	if err != nil {
 		log.Error(err)
-		os.Exit(0)
+		os.Exit(1)
 	}
 	fmt.Print(image)
 }
